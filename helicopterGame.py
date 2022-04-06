@@ -13,8 +13,22 @@ pygame.display.set_caption('Helicopter')
 clock = pygame.time.Clock()
 
 img = pygame.image.load('Helicopter.png')
-x = 150
-y = 200
+
+def replay_or_quit():
+    for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+        elif event.type == pygame.KEYDOWN:
+            continue
+
+        return event.key
+
+    return None
+
+def makeTextObjs(text,font):
+    textSurface = font.render(text, True, white)
+    return textSurface, textSurface.get_rect()
 
 def msgSurface(text):
     smallText = pygame.font.Font('freesansbold.ttf',20)
@@ -30,6 +44,11 @@ def msgSurface(text):
     pygame.display.update()
     time.sleep(1)
 
+    while replay_or_quit() == None:
+        clock.tick()
+
+    main()
+
 def gameOver():
     msgSurface('Kaboom!')
 
@@ -37,32 +56,37 @@ def helicopter(x,y,image):
     surface.blit(image,(x,y))
 
 # sourcery skip: merge-nested-ifs, merge-repeated-ifs, swap-nested-ifs
-y_move = 0
 
-game_over = False
 
-while not game_over:
-    for event in pygame.event.get():
-        if event.type ==  pygame.QUIT:
-            game_over = True
+def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
+    x = 150
+    y = 200
+    y_move = 0
+    game_over = False
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                y_move = -5
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                y_move = 5
+    while not game_over:
+        for event in pygame.event.get():
+            if event.type ==  pygame.QUIT:
+                game_over = True
 
-    y += y_move
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    y_move = -5
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    y_move = 5
 
-    surface.fill(black)
-    helicopter(x,y,img)
+        y += y_move
 
-    if y > (surfaceHeight - 40) or y <0:
-        gameOver()
+        surface.fill(black)
+        helicopter(x,y,img)
 
-    pygame.display.update()
-    clock.tick(60)
+        if y > (surfaceHeight - 40) or y <0:
+            gameOver()
 
+        pygame.display.update()
+        clock.tick(60)
+
+main()
 pygame.quit()
 quit()
