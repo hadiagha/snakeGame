@@ -8,7 +8,7 @@ white = (255,255,255)
 surfaceWidth = 800
 surfaceHeight = 500
 imageHeight = 43
-imgageWidth = 100
+imageWidth = 100
 
 
 pygame.init()
@@ -20,7 +20,7 @@ img = pygame.image.load('Helicopter.png')
 
 def blocks(x_block, y_block, block_width, block_height, gap):
     pygame.draw.rect(surface, white, [x_block, y_block, block_width, block_height])
-    pygame.draw.rect(surface, white, [x_block, y_block + block_height + gap, block_width, block_height])
+    pygame.draw.rect(surface, white, [x_block, y_block + block_height + gap, block_width, surfaceHeight])
 
 def replay_or_quit():
     for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT]):
@@ -76,8 +76,8 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
 
     block_width = 75
     block_height = randint(0,(surfaceHeight / 2))
-    gap = imageHeight * 3
-    block_move = 3
+    gap = imageHeight * 4.5
+    block_move = 6
 
     game_over = False
 
@@ -102,10 +102,27 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
 
         if y > (surfaceHeight - 40) or y <0:
             gameOver()
-        
+
         if x_block < (-1 * block_width):
             x_block = surfaceWidth
             block_height = randint(0, (surfaceHeight / 2))
+
+        if x + imageWidth > x_block:
+            print('possibly within the boundaries of x')
+
+            if y < block_height:
+                print('Y Crossover Uppder!')
+                if x - imageWidth < block_width + x_block:
+                    print('game over hits upper!')
+                    gameOver()
+
+        if x + imageWidth > x_block:
+            print('x crossover')
+            if y + imageHeight > block_height + gap:
+                print('Y crossover lower!')
+                if x < block_width + x_block:
+                    print('game over Lower!')
+                    gameOver()
 
         pygame.display.update()
         clock.tick(60)
