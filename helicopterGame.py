@@ -18,6 +18,12 @@ clock = pygame.time.Clock()
 
 img = pygame.image.load('Helicopter.png')
 
+def score(count):
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render(str("Score: " + str(count)), True, white)
+    surface.blit(text, [0,0])
+
+
 def blocks(x_block, y_block, block_width, block_height, gap):
     pygame.draw.rect(surface, white, [x_block, y_block, block_width, block_height])
     pygame.draw.rect(surface, white, [x_block, y_block + block_height + gap, block_width, surfaceHeight])
@@ -29,7 +35,6 @@ def replay_or_quit():
             quit()
         elif event.type == pygame.KEYDOWN:
             continue
-
         return event.key
 
     return None
@@ -58,7 +63,7 @@ def msgSurface(text):
     main()
 
 def gameOver():
-    msgSurface('Kaboom!')
+    msgSurface('Fucked!')
 
 def helicopter(x,y,image):
     surface.blit(image,(x,y))
@@ -79,6 +84,8 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
     gap = imageHeight * 4.5
     block_move = 6
 
+    current_score = 0
+
     game_over = False
 
     while not game_over:
@@ -97,6 +104,7 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
 
         surface.fill(black)
         helicopter(x,y,img)
+        score(current_score)
         blocks(x_block, y_block, block_width, block_height, gap)
         x_block -= block_move
 
@@ -108,21 +116,17 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
             block_height = randint(0, (surfaceHeight / 2))
 
         if x + imageWidth > x_block:
-            print('possibly within the boundaries of x')
-
             if y < block_height:
-                print('Y Crossover Uppder!')
                 if x - imageWidth < block_width + x_block:
-                    print('game over hits upper!')
                     gameOver()
 
         if x + imageWidth > x_block:
-            print('x crossover')
             if y + imageHeight > block_height + gap:
-                print('Y crossover lower!')
                 if x < block_width + x_block:
-                    print('game over Lower!')
                     gameOver()
+
+        if x < x_block and x > x_block - block_move:
+            current_score += 1
 
         pygame.display.update()
         clock.tick(60)
