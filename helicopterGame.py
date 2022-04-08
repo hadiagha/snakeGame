@@ -27,6 +27,7 @@ pygame.display.set_caption('Helicopter')
 clock = pygame.time.Clock()
 
 img = pygame.image.load('Helicopter.png')
+bg = pygame.image.load("bg.jpg")
 
 def score(count):
     font = pygame.font.Font('freesansbold.ttf',20)
@@ -114,7 +115,8 @@ def main():  # sourcery skip: merge-repeated-ifs, swap-nested-ifs
 
         y += y_move
 
-        surface.fill(black)
+        surface.blit(bg, (0, 0))
+        #surface.fill(black)
         helicopter(x,y,img)
         blocks(x_block, y_block, block_width, block_height, gap,blockColor)
         score(current_score)
