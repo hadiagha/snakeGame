@@ -14,7 +14,7 @@ LR = 0.001
 class Agent:
 
     def __init__(self):
-        self.n_maes = 0
+        self.n_games = 0
         self.epsilon = 0 #randomness
         self.gamma = 0 #discount rate
         self.memory = deque(maxlen = MAX_MEMORY)    #popleft
@@ -56,7 +56,23 @@ def train():
         agent.train_short_memory(state_old, final_move, reward, state_new, done)
 
         #remember
-        
+        agent.remember(state_old, final_move, reward, state_new, done)
+
+        if done:
+            #train the long memory, plot the results
+            game.reset()
+            agent.n_games += 1
+            agent.train_long_memory()
+
+            if score > record:
+                record = score
+                #agent.model.save()
+
+            print('Game', agent.n_games, 'Score', score, 'Record', record)
+
+            #To DO: plot 56'
+
+
 
 
 if __name__ == '__main__':
