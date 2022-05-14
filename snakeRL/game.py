@@ -68,11 +68,11 @@ class SnakeGameAI:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-        
+
         # 2. move
         self._move(action) # update the head
         self.snake.insert(0, self.head)
-        
+
         # 3. check if game over
         reward = 0
         game_over = False
@@ -88,7 +88,6 @@ class SnakeGameAI:
             self._place_food()
         else:
             self.snake.pop()
-        
         # 5. update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
